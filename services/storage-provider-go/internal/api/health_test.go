@@ -1,8 +1,3 @@
-// TODO(UPSPA-SP): Implement this file.
-// - Read: docs/apis.md and docs/openapi/sp.yaml (wire contract)
-// - Enforce: base64url-no-pad canonicalization + fixed-length checks
-// - Never log secrets (uid/suid/cid/cj/k_i/signatures/points)
-
 package api
 
 import (
@@ -12,32 +7,32 @@ import (
 	"testing"
 )
 
-// Go'da test fonksiyonları her zaman "Test" kelimesiyle başlar ve (t *testing.T) parametresi alır.
+// In Go, test functions always start with "Test" and take a (t *testing.T) parameter.
 func TestHandleHealth(t *testing.T) {
-	// 1. ADIM: Sahte bir müşteri isteği (Request) oluşturuyoruz
-	// İnternetten geliyormuş gibi "/v1/health" adresine bir GET isteği hazırlıyoruz.
+	// STEP 1: Create a fake client request.
+	// Prepare a GET request to "/v1/health" as if it came from the internet.
 	req, err := http.NewRequest("GET", "/v1/health", nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
 
-	// 2. ADIM: Sahte bir kargo kutusu (Response Recorder) oluşturuyoruz
-	// Sunucumuz cevabı internete değil, inceleyebilmemiz için bu sahte kutuya yazacak.
+	// STEP 2: Create a fake response container (Response Recorder).
+	// The server will write the response to this recorder instead of the network.
 	rr := httptest.NewRecorder()
 
-	// 3. ADIM: Test edeceğimiz fonksiyonu çalıştırıyoruz!
-	// Trafik polisine falan gerek yok, doğrudan handleHealth odasına sahte isteği ve kutuyu yolluyoruz.
+	// STEP 3: Run the function under test.
+	// No router is needed here; call handleHealth directly with the fake request and recorder.
 	handleHealth(rr, req)
 
-	// 4. ADIM: KONTROL 1 - Statü Kodu Doğru mu?
-	// 200 OK bekliyoruz. Bakalım gerçekten 200 mü dönmüş?
+	// STEP 4: CHECK 1 - Is the status code correct?
+	// We expect 200 OK.
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("Wrong status code returned! Expected: %v, Got: %v", http.StatusOK, status)
 	}
 
-	// 5. ADIM: KONTROL 2 - Gelen JSON Metni Doğru mu?
-	// Bizim WriteJSON aletimiz sonuna gizli bir alt satıra geçme (\n) karakteri ekleyebilir.
-	// O yüzden strings.TrimSpace ile o boşlukları temizleyip asıl metne bakıyoruz.
+	// STEP 5: CHECK 2 - Is the returned JSON text correct?
+	// WriteJSON may append a trailing newline (\n).
+	// Use strings.TrimSpace to remove it before comparing the actual content.
 	expected := `{"ok":true}`
 	actual := strings.TrimSpace(rr.Body.String())
 
