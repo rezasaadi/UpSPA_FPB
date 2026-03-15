@@ -6,6 +6,11 @@
 // Week 2: Fixed invalid-point test (all-zeros is the Ristretto255 identity,
 // not an invalid encoding). Added ErrInvalidScalar test. See efe-week2.md.
 
+/*Bugs are added.
+Bug 2 — ristretto_test.go: make([]byte, 32) (all-zeros) is the Ristretto255 identity point encoding 
+— it's valid, so the test expecting ErrInvalidPoint would pass by accident on some builds and fail on others depending on version. 
+A genuinely invalid encoding (e.g. 0xFF * 32) is needed.
+*/
 package crypto_test
 
 import (
