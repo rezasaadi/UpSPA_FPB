@@ -1,4 +1,4 @@
-package types
+package model
 
 // CtBlob is the encrypted payload container used for both cid and cj.
 type CtBlob struct {

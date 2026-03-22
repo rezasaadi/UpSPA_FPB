@@ -30,8 +30,8 @@ func WriteJSON(w http.ResponseWriter, status int, data any) error {
 
 // WriteError writes the standard JSON error response defined for the API.
 func WriteError(w http.ResponseWriter, status int, code string, message string, details map[string]any) {
-	errResp := types.ErrorResponse{
-		Error: types.ErrorDetail{
+	errResp := model.ErrorResponse{
+		Error: model.ErrorDetail{
 			Code:    code,
 			Message: message,
 			Details: details,
