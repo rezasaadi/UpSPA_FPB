@@ -1,16 +1,6 @@
-// TODO(UPSPA-SP): Implement this file.
-// - Read: docs/apis.md and docs/openapi/sp.yaml (wire contract)
-// - Enforce: base64url-no-pad canonicalization + fixed-length checks
-// - Never log secrets (uid/suid/cid/cj/k_i/signatures/points)
-
 // Week 2: Fixed invalid-point test (all-zeros is the Ristretto255 identity,
-// not an invalid encoding). Added ErrInvalidScalar test. See efe-week2.md.
+// not an invalid encoding). Added ErrInvalidScalar test. See INTERN_NOTES/efe-week2.md.
 
-/*Bugs are added.
-Bug 2 — ristretto_test.go: make([]byte, 32) (all-zeros) is the Ristretto255 identity point encoding 
-— it's valid, so the test expecting ErrInvalidPoint would pass by accident on some builds and fail on others depending on version. 
-A genuinely invalid encoding (e.g. 0xFF * 32) is needed.
-*/
 package crypto_test
 
 import (
@@ -20,12 +10,11 @@ import (
 	"testing"
 
 	"filippo.io/edwards25519"
-	"github.com/your-org/sp/internal/crypto"
+	"github.com/rezasaadi/UpSPA_FPB/services/storage-provider-go/internal/crypto"
 )
 
 // validRistrettoPoint returns a known-valid Ristretto255 point (the base point).
 func validRistrettoPoint() []byte {
-	// Use the Edwards25519 base point, which is also a valid Ristretto255 point.
 	return edwards25519.NewGeneratorPoint().Bytes()
 }
 
@@ -33,8 +22,7 @@ func TestRistrettoScalarMult_ValidInputs(t *testing.T) {
 	k := make([]byte, 32)
 	rand.Read(k)
 	// Reduce k so it is a canonical scalar (value < group order l).
-	// In production, k_i is always generated as a canonical scalar.
-	k[31] &= 0x0f // clear high bits to ensure value < l
+	k[31] &= 0x0f
 
 	point := validRistrettoPoint()
 	y, err := crypto.RistrettoScalarMult(k, point)
@@ -88,11 +76,11 @@ func TestRistrettoScalarMult_DifferentKeys_DifferentOutputs(t *testing.T) {
 
 func TestRistrettoScalarMult_InvalidPoint(t *testing.T) {
 	k := make([]byte, 32)
-	k[0] = 1 // canonical scalar = 1
+	k[0] = 1
 
 	// NOTE: all-zeros (make([]byte,32)) is the Ristretto255 IDENTITY point —
 	// a valid encoding. Use 0xFF*32 instead, which is not a valid encoding.
-	badPoint := bytes.Repeat([]byte{0xFF}, 32)
+	badPoint := bytes.Repeat([]byte{0x02}, 32)
 	_, err := crypto.RistrettoScalarMult(k, badPoint)
 	if err == nil {
 		t.Fatal("expected error for invalid Ristretto point")
@@ -104,7 +92,6 @@ func TestRistrettoScalarMult_InvalidPoint(t *testing.T) {
 
 func TestRistrettoScalarMult_InvalidScalar(t *testing.T) {
 	// A scalar value >= group order l is not canonical.
-	// l = 2^252 + 27742317777372353535851937790883648493
 	// Setting all bytes to 0xFF gives a value >> l.
 	badScalar := bytes.Repeat([]byte{0xFF}, 32)
 	_, err := crypto.RistrettoScalarMult(badScalar, validRistrettoPoint())
@@ -136,7 +123,7 @@ func TestRistrettoScalarMult_IdentityPoint_IsValid(t *testing.T) {
 	// Explicit regression: the all-zero encoding IS the Ristretto255 identity
 	// and must NOT return ErrInvalidPoint.
 	k := make([]byte, 32)
-	k[0] = 1 // scalar = 1
+	k[0] = 1
 	identity := make([]byte, 32)
 	_, err := crypto.RistrettoScalarMult(k, identity)
 	if errors.Is(err, crypto.ErrInvalidPoint) {
