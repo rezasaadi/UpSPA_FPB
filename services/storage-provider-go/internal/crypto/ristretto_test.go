@@ -1,5 +1,8 @@
-// Week 2: Fixed invalid-point test (all-zeros is the Ristretto255 identity,
-// not an invalid encoding). Added ErrInvalidScalar test. See INTERN_NOTES/efe-week2.md.
+// April: Switched test vectors from edwards25519.NewGeneratorPoint().Bytes()
+// to ristretto255.NewGeneratorElement().Encode(...). The previous tests
+// passed because they never used Ristretto255-encoded bytes — they used
+// raw Edwards25519 compressed encodings, which would not have decoded
+// correctly against the real Rust client. See INTERN_NOTES/efe-week4.md.
 
 package crypto_test
 
@@ -9,18 +12,22 @@ import (
 	"errors"
 	"testing"
 
-	"filippo.io/edwards25519"
-	"github.com/rezasaadi/UpSPA_FPB/services/storage-provider-go/internal/crypto"
+	"github.com/gtank/ristretto255"
+	"upspa/internal/crypto"
 )
 
-// validRistrettoPoint returns a known-valid Ristretto255 point (the base point).
+// validRistrettoPoint returns a known-valid Ristretto255 point: the canonical
+// Ristretto255 generator (RFC 9496 §6.1.1, basepoint encoding
+// e2f2ae0a 6abc4e71 a884a961 c500515f 58e30b6a a582dd8d b6a65945 e08d2d76).
 func validRistrettoPoint() []byte {
-	return edwards25519.NewGeneratorPoint().Bytes()
+	return ristretto255.NewGeneratorElement().Encode(make([]byte, 0, 32))
 }
 
 func TestRistrettoScalarMult_ValidInputs(t *testing.T) {
 	k := make([]byte, 32)
-	rand.Read(k)
+	if _, err := rand.Read(k); err != nil {
+		t.Fatal(err)
+	}
 	// Reduce k so it is a canonical scalar (value < group order l).
 	k[31] &= 0x0f
 
@@ -36,7 +43,9 @@ func TestRistrettoScalarMult_ValidInputs(t *testing.T) {
 
 func TestRistrettoScalarMult_Deterministic(t *testing.T) {
 	k := make([]byte, 32)
-	rand.Read(k)
+	if _, err := rand.Read(k); err != nil {
+		t.Fatal(err)
+	}
 	k[31] &= 0x0f
 	point := validRistrettoPoint()
 
@@ -48,7 +57,7 @@ func TestRistrettoScalarMult_Deterministic(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if string(y1) != string(y2) {
+	if !bytes.Equal(y1, y2) {
 		t.Error("RistrettoScalarMult is not deterministic")
 	}
 }
@@ -74,13 +83,30 @@ func TestRistrettoScalarMult_DifferentKeys_DifferentOutputs(t *testing.T) {
 	}
 }
 
+// Cross-check against curve25519-dalek by pinning the wire-encoded result of
+// 1 * G == G. This is the property that makes the encoding switch correct:
+// the canonical Ristretto255 generator must round-trip through k=1.
+func TestRistrettoScalarMult_OneTimesG_RoundTrip(t *testing.T) {
+	one := make([]byte, 32)
+	one[0] = 1
+	g := validRistrettoPoint()
+
+	y, err := crypto.RistrettoScalarMult(one, g)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if !bytes.Equal(y, g) {
+		t.Errorf("1*G should equal G\n got: %x\nwant: %x", y, g)
+	}
+}
+
 func TestRistrettoScalarMult_InvalidPoint(t *testing.T) {
 	k := make([]byte, 32)
 	k[0] = 1
 
-	// NOTE: all-zeros (make([]byte,32)) is the Ristretto255 IDENTITY point —
-	// a valid encoding. Use 0xFF*32 instead, which is not a valid encoding.
-	badPoint := bytes.Repeat([]byte{0x02}, 32)
+	// 0xFF*32 has the high bit set in the last byte, which Ristretto255
+	// requires to be clear (the spec reserves that bit). It must be rejected.
+	badPoint := bytes.Repeat([]byte{0xFF}, 32)
 	_, err := crypto.RistrettoScalarMult(k, badPoint)
 	if err == nil {
 		t.Fatal("expected error for invalid Ristretto point")
@@ -121,7 +147,7 @@ func TestRistrettoScalarMult_WrongPointLength(t *testing.T) {
 
 func TestRistrettoScalarMult_IdentityPoint_IsValid(t *testing.T) {
 	// Explicit regression: the all-zero encoding IS the Ristretto255 identity
-	// and must NOT return ErrInvalidPoint.
+	// (RFC 9496 §4.3.1) and must NOT return ErrInvalidPoint.
 	k := make([]byte, 32)
 	k[0] = 1
 	identity := make([]byte, 32)
