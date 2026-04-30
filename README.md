@@ -1,6 +1,6 @@
 # `internal/crypto`
 
-> **Owner:** Efe — `intern/efe/...`  
+> **Owner:** Efe Bekteş — `intern/efe/...`  
 > **Week 1 status:** Underlying cryptography concepts skimmed; AI-assisted template code written and structured.
 
 ---
