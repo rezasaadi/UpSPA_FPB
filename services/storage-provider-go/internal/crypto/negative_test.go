@@ -8,7 +8,7 @@
 //   - VerifyEd25519 panic guards for wrong-length inputs
 //
 // Update (Week 4 Patch B): import path corrected from the placeholder
-// "github.com/rezasaadi/UpSPA_FPB/..." to "upspa/internal/crypto" matching
+// "github.com/rezasaadi/UpSPA_FPB/..." to "github.com/rezasaadi/UpSPA_FPB/services/storage-provider-go" matching
 // the actual go.mod module declaration. Invalid-point vectors switched to
 // Ristretto255-specific (RFC 9496) ones now that ristretto.go uses
 // gtank/ristretto255 rather than the previous Edwards25519 encoding.
@@ -21,7 +21,7 @@ import (
 	"errors"
 	"testing"
 
-	"upspa/internal/crypto"
+	"github.com/rezasaadi/UpSPA_FPB/services/storage-provider-go"
 )
 
 // ---------------------------------------------------------------------------

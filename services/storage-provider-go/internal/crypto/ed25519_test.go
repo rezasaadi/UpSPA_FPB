@@ -12,7 +12,7 @@ import (
 	"crypto/rand"
 	"testing"
 
-	"github.com/your-org/sp/internal/crypto"
+	"github.com/rezasaadi/UpSPA_FPB/services/storage-provider-go"
 )
 
 func TestVerifyEd25519_ValidSig(t *testing.T) {
