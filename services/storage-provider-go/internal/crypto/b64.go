@@ -33,16 +33,6 @@ var ErrWrongLength = errors.New("wrong_byte_length")
 var enc = base64.RawURLEncoding
 
 // Fixed byte-length constants (Shared Contract §2).
-// Reject inputs with wrong lengths → 400.
-const (
-	LenEd25519PublicKey = 32
-	LenEd25519Signature = 64
-	LenCtBlobNonce      = 24
-	LenCtBlobTag        = 16
-	LenRistretto        = 32
-	LenScalarKi         = 32
-)
-
 // CanonicalB64 decodes a base64url string (with or without padding) and
 // re-encodes it in canonical base64url-no-pad form.
 //

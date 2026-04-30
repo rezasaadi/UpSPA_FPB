@@ -15,7 +15,7 @@ import (
 	"encoding/base64"
 	"testing"
 
-	"github.com/rezasaadi/UpSPA_FPB/services/storage-provider-go/internal/crypto"
+	"github.com/rezasaadi/UpSPA_FPB/services/storage-provider-go"
 )
 
 // FuzzCanonicalB64 verifies round-trip correctness and idempotence.

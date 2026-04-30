@@ -1,11 +1,17 @@
-// Week 4: Expanded negative test suite.
+// April: Expanded negative test suite.
 //
 // Covers every rejection category the protocol requires (HTTP 400):
 //   - Malformed base64 (whitespace, null bytes, wrong alphabet)
 //   - Wrong byte lengths for every fixed-size wire field
-//   - Invalid Ristretto255 point encodings
+//   - Invalid Ristretto255 point encodings (per RFC 9496 §4.3.1)
 //   - Invalid (non-canonical) scalar encodings
 //   - VerifyEd25519 panic guards for wrong-length inputs
+//
+// Update (Week 4 Patch B): import path corrected from the placeholder
+// "github.com/rezasaadi/UpSPA_FPB/..." to "github.com/rezasaadi/UpSPA_FPB/services/storage-provider-go" matching
+// the actual go.mod module declaration. Invalid-point vectors switched to
+// Ristretto255-specific (RFC 9496) ones now that ristretto.go uses
+// gtank/ristretto255 rather than the previous Edwards25519 encoding.
 
 package crypto_test
 
@@ -15,7 +21,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/rezasaadi/UpSPA_FPB/services/storage-provider-go/internal/crypto"
+	"github.com/rezasaadi/UpSPA_FPB/services/storage-provider-go"
 )
 
 // ---------------------------------------------------------------------------
@@ -135,24 +141,48 @@ func TestDecodeFixedB64_Negative_InvalidBase64WinsOverWrongLength(t *testing.T) 
 }
 
 // ---------------------------------------------------------------------------
-// Invalid Ristretto255 point encodings
+// Invalid Ristretto255 point encodings (RFC 9496 §4.3.1)
 // ---------------------------------------------------------------------------
 
 func TestRistrettoScalarMult_Negative_InvalidPoints(t *testing.T) {
 	k := make([]byte, 32)
 	k[0] = 1 // canonical scalar = 1
 
-	// Note: 0xFF*32 and 0x80*32 are ACCEPTED by filippo.io/edwards25519 v1.1.0 —
-	// they happen to decode to valid curve points in the Edwards25519 field.
-	// Use encodings verified to be rejected by the library.
+	// Per RFC 9496 §4.3.1, the decode procedure rejects:
+	//   1. encodings whose top bit (s[31] & 0x80) is set,
+	//   2. encodings of non-canonical field elements (s >= p),
+	//   3. encodings that do not lie in the Ristretto element set.
+	//
+	// We pin a few cases from each rejection class.
 	cases := []struct {
 		name  string
 		point []byte
 	}{
-		{"all 0x02", bytes.Repeat([]byte{0x02}, 32)},
-		{"all 0x7F", bytes.Repeat([]byte{0x7F}, 32)},
-		{"last byte 0x01", func() []byte { p := make([]byte, 32); p[31] = 0x01; return p }()},
-		{"last byte 0xE0", func() []byte { p := make([]byte, 32); p[31] = 0xE0; return p }()},
+		{
+			// Top bit set in last byte → step 1 rejection.
+			name:  "high-bit set (0xFF*32)",
+			point: bytes.Repeat([]byte{0xFF}, 32),
+		},
+		{
+			// Top bit set in last byte, otherwise zero → step 1 rejection.
+			name:  "last byte 0x80",
+			point: func() []byte { p := make([]byte, 32); p[31] = 0x80; return p }(),
+		},
+		{
+			// Non-canonical field element: value > p.
+			// p = 2^255 - 19, so encoding (0xED, 0xFF*30, 0x7F) = p, and any
+			// value above p is non-canonical. We use (0xEE, 0xFF*30, 0x7F) = p+1.
+			name: "non-canonical field element (p+1)",
+			point: func() []byte {
+				p := make([]byte, 32)
+				p[0] = 0xEE
+				for i := 1; i < 31; i++ {
+					p[i] = 0xFF
+				}
+				p[31] = 0x7F
+				return p
+			}(),
+		},
 	}
 
 	for _, tc := range cases {

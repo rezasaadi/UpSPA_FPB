@@ -13,7 +13,7 @@ import (
 	"testing"
 
 	"github.com/gtank/ristretto255"
-	"upspa/internal/crypto"
+	"github.com/rezasaadi/UpSPA_FPB/services/storage-provider-go"
 )
 
 // validRistrettoPoint returns a known-valid Ristretto255 point: the canonical

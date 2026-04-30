@@ -1,0 +1,192 @@
+=== RUN   TestCanonicalB64_RoundTrip
+--- PASS: TestCanonicalB64_RoundTrip (0.00s)
+=== RUN   TestCanonicalB64_AcceptsPadded
+--- PASS: TestCanonicalB64_AcceptsPadded (0.00s)
+=== RUN   TestCanonicalB64_RejectsInvalid
+--- PASS: TestCanonicalB64_RejectsInvalid (0.00s)
+=== RUN   TestDecodeFixedB64_CorrectLength
+--- PASS: TestDecodeFixedB64_CorrectLength (0.00s)
+=== RUN   TestDecodeFixedB64_WrongLength
+--- PASS: TestDecodeFixedB64_WrongLength (0.00s)
+=== RUN   TestDecodeFixedB64_InvalidBase64
+--- PASS: TestDecodeFixedB64_InvalidBase64 (0.00s)
+=== RUN   TestLenConstants
+--- PASS: TestLenConstants (0.00s)
+=== RUN   TestVerifyEd25519_ValidSig
+--- PASS: TestVerifyEd25519_ValidSig (0.00s)
+=== RUN   TestVerifyEd25519_InvalidSig
+--- PASS: TestVerifyEd25519_InvalidSig (0.00s)
+=== RUN   TestVerifyEd25519_TamperedMessage
+--- PASS: TestVerifyEd25519_TamperedMessage (0.00s)
+=== RUN   TestVerifyEd25519_WrongPublicKey
+--- PASS: TestVerifyEd25519_WrongPublicKey (0.00s)
+=== RUN   TestVerifyEd25519_PanicsOnWrongPkLength
+--- PASS: TestVerifyEd25519_PanicsOnWrongPkLength (0.00s)
+=== RUN   TestVerifyEd25519_PanicsOnWrongSigLength
+--- PASS: TestVerifyEd25519_PanicsOnWrongSigLength (0.00s)
+=== RUN   TestCanonicalB64_Negative_StandardAlphabetPlusSlash
+--- PASS: TestCanonicalB64_Negative_StandardAlphabetPlusSlash (0.00s)
+=== RUN   TestCanonicalB64_Negative_Punctuation
+--- PASS: TestCanonicalB64_Negative_Punctuation (0.00s)
+=== RUN   TestCanonicalB64_Negative_EmbeddedWhitespace
+--- PASS: TestCanonicalB64_Negative_EmbeddedWhitespace (0.00s)
+=== RUN   TestCanonicalB64_Negative_NullBytes
+--- PASS: TestCanonicalB64_Negative_NullBytes (0.00s)
+=== RUN   TestCanonicalB64_Negative_HighByteChars
+--- PASS: TestCanonicalB64_Negative_HighByteChars (0.00s)
+=== RUN   TestDecodeFixedB64_Negative_Ed25519PublicKey
+--- PASS: TestDecodeFixedB64_Negative_Ed25519PublicKey (0.00s)
+=== RUN   TestDecodeFixedB64_Negative_Ed25519Signature
+--- PASS: TestDecodeFixedB64_Negative_Ed25519Signature (0.00s)
+=== RUN   TestDecodeFixedB64_Negative_CtBlobNonce
+--- PASS: TestDecodeFixedB64_Negative_CtBlobNonce (0.00s)
+=== RUN   TestDecodeFixedB64_Negative_CtBlobTag
+--- PASS: TestDecodeFixedB64_Negative_CtBlobTag (0.00s)
+=== RUN   TestDecodeFixedB64_Negative_Ristretto
+--- PASS: TestDecodeFixedB64_Negative_Ristretto (0.00s)
+=== RUN   TestDecodeFixedB64_Negative_ScalarKi
+--- PASS: TestDecodeFixedB64_Negative_ScalarKi (0.00s)
+=== RUN   TestDecodeFixedB64_Negative_InvalidBase64WinsOverWrongLength
+--- PASS: TestDecodeFixedB64_Negative_InvalidBase64WinsOverWrongLength (0.00s)
+=== RUN   TestRistrettoScalarMult_Negative_InvalidPoints
+=== RUN   TestRistrettoScalarMult_Negative_InvalidPoints/high-bit_set_(0xFF*32)
+=== RUN   TestRistrettoScalarMult_Negative_InvalidPoints/last_byte_0x80
+=== RUN   TestRistrettoScalarMult_Negative_InvalidPoints/non-canonical_field_element_(p+1)
+--- PASS: TestRistrettoScalarMult_Negative_InvalidPoints (0.00s)
+    --- PASS: TestRistrettoScalarMult_Negative_InvalidPoints/high-bit_set_(0xFF*32) (0.00s)
+    --- PASS: TestRistrettoScalarMult_Negative_InvalidPoints/last_byte_0x80 (0.00s)
+    --- PASS: TestRistrettoScalarMult_Negative_InvalidPoints/non-canonical_field_element_(p+1) (0.00s)
+=== RUN   TestRistrettoScalarMult_Negative_InvalidScalars
+=== RUN   TestRistrettoScalarMult_Negative_InvalidScalars/all_0xFF_(>>_l)
+=== RUN   TestRistrettoScalarMult_Negative_InvalidScalars/all_0x7F_(>_l)
+=== RUN   TestRistrettoScalarMult_Negative_InvalidScalars/scalar_equals_l
+=== RUN   TestRistrettoScalarMult_Negative_InvalidScalars/scalar_equals_l+1
+--- PASS: TestRistrettoScalarMult_Negative_InvalidScalars (0.00s)
+    --- PASS: TestRistrettoScalarMult_Negative_InvalidScalars/all_0xFF_(>>_l) (0.00s)
+    --- PASS: TestRistrettoScalarMult_Negative_InvalidScalars/all_0x7F_(>_l) (0.00s)
+    --- PASS: TestRistrettoScalarMult_Negative_InvalidScalars/scalar_equals_l (0.00s)
+    --- PASS: TestRistrettoScalarMult_Negative_InvalidScalars/scalar_equals_l+1 (0.00s)
+=== RUN   TestRistrettoScalarMult_Negative_ScalarWrongLengths
+--- PASS: TestRistrettoScalarMult_Negative_ScalarWrongLengths (0.00s)
+=== RUN   TestRistrettoScalarMult_Negative_PointWrongLengths
+--- PASS: TestRistrettoScalarMult_Negative_PointWrongLengths (0.00s)
+=== RUN   TestVerifyEd25519_Negative_ShortKeyPanics
+--- PASS: TestVerifyEd25519_Negative_ShortKeyPanics (0.00s)
+=== RUN   TestVerifyEd25519_Negative_LongKeyPanics
+--- PASS: TestVerifyEd25519_Negative_LongKeyPanics (0.00s)
+=== RUN   TestVerifyEd25519_Negative_ShortSigPanics
+--- PASS: TestVerifyEd25519_Negative_ShortSigPanics (0.00s)
+=== RUN   TestVerifyEd25519_Negative_LongSigPanics
+--- PASS: TestVerifyEd25519_Negative_LongSigPanics (0.00s)
+=== RUN   TestBuildPwdUpdateSigMsg_TotalLength_EmptyCt
+--- PASS: TestBuildPwdUpdateSigMsg_TotalLength_EmptyCt (0.00s)
+=== RUN   TestBuildPwdUpdateSigMsg_TotalLength_NonEmptyCt
+--- PASS: TestBuildPwdUpdateSigMsg_TotalLength_NonEmptyCt (0.00s)
+=== RUN   TestBuildPwdUpdateSigMsg_Nonce_Offset
+--- PASS: TestBuildPwdUpdateSigMsg_Nonce_Offset (0.00s)
+=== RUN   TestBuildPwdUpdateSigMsg_Ct_Offset
+--- PASS: TestBuildPwdUpdateSigMsg_Ct_Offset (0.00s)
+=== RUN   TestBuildPwdUpdateSigMsg_Ct_Empty
+--- PASS: TestBuildPwdUpdateSigMsg_Ct_Empty (0.00s)
+=== RUN   TestBuildPwdUpdateSigMsg_Tag_Offset
+--- PASS: TestBuildPwdUpdateSigMsg_Tag_Offset (0.00s)
+=== RUN   TestBuildPwdUpdateSigMsg_KiNew_Offset
+--- PASS: TestBuildPwdUpdateSigMsg_KiNew_Offset (0.00s)
+=== RUN   TestBuildPwdUpdateSigMsg_Timestamp_LittleEndian
+--- PASS: TestBuildPwdUpdateSigMsg_Timestamp_LittleEndian (0.00s)
+=== RUN   TestBuildPwdUpdateSigMsg_Timestamp_KnownBytes
+--- PASS: TestBuildPwdUpdateSigMsg_Timestamp_KnownBytes (0.00s)
+=== RUN   TestBuildPwdUpdateSigMsg_Timestamp_Zero
+--- PASS: TestBuildPwdUpdateSigMsg_Timestamp_Zero (0.00s)
+=== RUN   TestBuildPwdUpdateSigMsg_SpID_LittleEndian
+--- PASS: TestBuildPwdUpdateSigMsg_SpID_LittleEndian (0.00s)
+=== RUN   TestBuildPwdUpdateSigMsg_SpID_KnownBytes
+--- PASS: TestBuildPwdUpdateSigMsg_SpID_KnownBytes (0.00s)
+=== RUN   TestBuildPwdUpdateSigMsg_SpID_Zero
+--- PASS: TestBuildPwdUpdateSigMsg_SpID_Zero (0.00s)
+=== RUN   TestBuildPwdUpdateSigMsg_GoldenVector
+--- PASS: TestBuildPwdUpdateSigMsg_GoldenVector (0.00s)
+=== RUN   TestBuildPwdUpdateSigMsg_NoAlias
+--- PASS: TestBuildPwdUpdateSigMsg_NoAlias (0.00s)
+=== RUN   TestRistrettoScalarMult_ValidInputs
+--- PASS: TestRistrettoScalarMult_ValidInputs (0.00s)
+=== RUN   TestRistrettoScalarMult_Deterministic
+--- PASS: TestRistrettoScalarMult_Deterministic (0.00s)
+=== RUN   TestRistrettoScalarMult_DifferentKeys_DifferentOutputs
+--- PASS: TestRistrettoScalarMult_DifferentKeys_DifferentOutputs (0.00s)
+=== RUN   TestRistrettoScalarMult_OneTimesG_RoundTrip
+--- PASS: TestRistrettoScalarMult_OneTimesG_RoundTrip (0.00s)
+=== RUN   TestRistrettoScalarMult_InvalidPoint
+--- PASS: TestRistrettoScalarMult_InvalidPoint (0.00s)
+=== RUN   TestRistrettoScalarMult_InvalidScalar
+--- PASS: TestRistrettoScalarMult_InvalidScalar (0.00s)
+=== RUN   TestRistrettoScalarMult_WrongScalarLength
+--- PASS: TestRistrettoScalarMult_WrongScalarLength (0.00s)
+=== RUN   TestRistrettoScalarMult_WrongPointLength
+--- PASS: TestRistrettoScalarMult_WrongPointLength (0.00s)
+=== RUN   TestRistrettoScalarMult_IdentityPoint_IsValid
+--- PASS: TestRistrettoScalarMult_IdentityPoint_IsValid (0.00s)
+=== RUN   TestGenerateScalarKi_Length
+--- PASS: TestGenerateScalarKi_Length (0.00s)
+=== RUN   TestGenerateScalarKi_IsCanonical
+--- PASS: TestGenerateScalarKi_IsCanonical (0.05s)
+=== RUN   TestGenerateScalarKi_Unique
+--- PASS: TestGenerateScalarKi_Unique (0.00s)
+=== RUN   TestGenerateScalarKi_NotAllZeros
+--- PASS: TestGenerateScalarKi_NotAllZeros (0.00s)
+=== RUN   FuzzCanonicalB64
+=== RUN   FuzzCanonicalB64/seed#0
+=== RUN   FuzzCanonicalB64/seed#1
+=== RUN   FuzzCanonicalB64/seed#2
+=== RUN   FuzzCanonicalB64/seed#3
+=== RUN   FuzzCanonicalB64/seed#4
+=== RUN   FuzzCanonicalB64/seed#5
+=== RUN   FuzzCanonicalB64/seed#6
+=== RUN   FuzzCanonicalB64/seed#7
+=== RUN   FuzzCanonicalB64/seed#8
+=== RUN   FuzzCanonicalB64/seed#9
+=== RUN   FuzzCanonicalB64/seed#10
+=== RUN   FuzzCanonicalB64/seed#11
+=== RUN   FuzzCanonicalB64/seed#12
+=== RUN   FuzzCanonicalB64/seed#13
+=== RUN   FuzzCanonicalB64/seed#14
+=== RUN   FuzzCanonicalB64/seed#15
+=== RUN   FuzzCanonicalB64/seed#16
+--- PASS: FuzzCanonicalB64 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#0 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#1 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#2 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#3 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#4 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#5 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#6 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#7 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#8 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#9 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#10 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#11 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#12 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#13 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#14 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#15 (0.00s)
+    --- PASS: FuzzCanonicalB64/seed#16 (0.00s)
+=== RUN   FuzzDecodeFixedB64
+=== RUN   FuzzDecodeFixedB64/seed#0
+=== RUN   FuzzDecodeFixedB64/seed#1
+=== RUN   FuzzDecodeFixedB64/seed#2
+=== RUN   FuzzDecodeFixedB64/seed#3
+=== RUN   FuzzDecodeFixedB64/seed#4
+=== RUN   FuzzDecodeFixedB64/seed#5
+=== RUN   FuzzDecodeFixedB64/seed#6
+=== RUN   FuzzDecodeFixedB64/seed#7
+--- PASS: FuzzDecodeFixedB64 (0.00s)
+    --- PASS: FuzzDecodeFixedB64/seed#0 (0.00s)
+    --- PASS: FuzzDecodeFixedB64/seed#1 (0.00s)
+    --- PASS: FuzzDecodeFixedB64/seed#2 (0.00s)
+    --- PASS: FuzzDecodeFixedB64/seed#3 (0.00s)
+    --- PASS: FuzzDecodeFixedB64/seed#4 (0.00s)
+    --- PASS: FuzzDecodeFixedB64/seed#5 (0.00s)
+    --- PASS: FuzzDecodeFixedB64/seed#6 (0.00s)
+    --- PASS: FuzzDecodeFixedB64/seed#7 (0.00s)
+PASS
+ok  	github.com/rezasaadi/UpSPA_FPB/services/storage-provider-go	(cached)
