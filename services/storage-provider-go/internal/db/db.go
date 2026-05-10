@@ -1,17 +1,16 @@
-// TODO(UPSPA-SP): Implement this file.
-// - Read: docs/apis.md and docs/openapi/sp.yaml (wire contract)
-// - Enforce: base64url-no-pad canonicalization + fixed-length checks
-// - Never log secrets (uid/suid/cid/cj/k_i/signatures/points)
 package db
 
 import (
 	"context"
+	"embed"
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
+
+//go:embed migrations/*.sql
+var migrations embed.FS
 
 type Store struct {
 	pool *pgxpool.Pool
@@ -21,6 +20,14 @@ func New(ctx context.Context) (*Store, error) {
 	dsn := os.Getenv("DATABASE_URL")
 	if dsn == "" {
 		return nil, fmt.Errorf("DATABASE_URL is not set")
+	}
+
+	return NewWithDSN(ctx, dsn)
+}
+
+func NewWithDSN(ctx context.Context, dsn string) (*Store, error) {
+	if dsn == "" {
+		return nil, fmt.Errorf("database DSN is empty")
 	}
 
 	pool, err := pgxpool.New(ctx, dsn)
@@ -43,8 +50,7 @@ func (s *Store) Close() {
 }
 
 func applyMigrations(ctx context.Context, pool *pgxpool.Pool) error {
-	path := filepath.Join("internal", "db", "migrations", "001_init.sql")
-	sqlBytes, err := os.ReadFile(path)
+	sqlBytes, err := migrations.ReadFile("migrations/001_init.sql")
 	if err != nil {
 		return fmt.Errorf("read migration: %w", err)
 	}
