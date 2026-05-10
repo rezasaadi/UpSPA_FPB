@@ -1,7 +1,3 @@
-// TODO(UPSPA-SP): Implement this file.
-// - Read: docs/apis.md and docs/openapi/sp.yaml (wire contract)
-// - Enforce: base64url-no-pad canonicalization + fixed-length checks
-// - Never log secrets (uid/suid/cid/cj/k_i/signatures/points)
 package db
 
 import (
@@ -81,6 +77,7 @@ func (s *Store) GetRecord(ctx context.Context, suid string) (cjNonce, cjCt, cjTa
 	}
 	return cjNonce, cjCt, cjTag, true, nil
 }
+
 func (s *Store) UpdateRecord(ctx context.Context, suid, cjNonce, cjCt, cjTag string) (bool, error) {
 	const q = `
 		UPDATE records
@@ -102,6 +99,7 @@ func (s *Store) DeleteRecord(ctx context.Context, suid string) (bool, error) {
 	}
 	return tag.RowsAffected() == 1, nil
 }
+
 func (s *Store) ApplyPasswordUpdate(ctx context.Context, uid string, ts int64, cidNonceNew, cidCtNew, cidTagNew, kINew string) (bool, error) {
 	const q = `
 		UPDATE setup
