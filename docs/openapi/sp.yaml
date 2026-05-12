@@ -1,0 +1,246 @@
+openapi: 3.0.3
+info:
+  title: Storage Provider API
+  version: 1.0.0
+servers:
+  - url: /v1
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+  /setup:
+    post:
+      summary: Setup cryptographic material
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetupRequest'
+      responses:
+        '201':
+          description: Created
+        '200':
+          description: IDempotent OK
+        '400':
+          description: Bad Request
+  /setup/{uid_b64}:
+    get:
+      summary: Get setup material
+      parameters:
+        - name: uid_b64
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetupResponse'
+        '404':
+          description: Not Found
+  /toprf/eval:
+    post:
+      summary: Evaluate TOPRF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToprfEvalRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToprfEvalResponse'
+        '400':
+          description: Bad Request
+  /records:
+    post:
+      summary: Create record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordCreateRequest'
+      responses:
+        '201':
+          description: Created
+        '409':
+          description: Conflict
+  /records/{suid_b64}:
+    get:
+      summary: Get record
+      parameters:
+        - name: suid_b64
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordResponse'
+    put:
+      summary: Update record
+      parameters:
+        - name: suid_b64
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordUpdateRequest'
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: Delete record
+      parameters:
+        - name: suid_b64
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /password-update:
+    post:
+      summary: Update master password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordUpdateRequest'
+      responses:
+        '200':
+          description: OK
+
+components:
+  schemas:
+    CtBlob:
+      type: object
+      required:
+        - nonce
+        - ct
+        - tag
+      properties:
+        nonce:
+          type: string
+        ct:
+          type: string
+        tag:
+          type: string
+    SetupRequest:
+      type: object
+      required:
+        - uid_b64
+        - sig_pk_b64
+        - cid
+        - k_i_b64
+      properties:
+        uid_b64:
+          type: string
+        sig_pk_b64:
+          type: string
+        cid:
+          $ref: '#/components/schemas/CtBlob'
+        k_i_b64:
+          type: string
+    SetupResponse:
+      type: object
+      properties:
+        uid_b64:
+          type: string
+        sig_pk_b64:
+          type: string
+        cid:
+          $ref: '#/components/schemas/CtBlob'
+    ToprfEvalRequest:
+      type: object
+      required:
+        - uid_b64
+        - blinded_b64
+      properties:
+        uid_b64:
+          type: string
+        blinded_b64:
+          type: string
+    ToprfEvalResponse:
+      type: object
+      properties:
+        sp_id:
+          type: integer
+        y_b64:
+          type: string
+    RecordCreateRequest:
+      type: object
+      required:
+        - suid_b64
+        - cj
+      properties:
+        suid_b64:
+          type: string
+        cj:
+          $ref: '#/components/schemas/CtBlob'
+    RecordUpdateRequest:
+      type: object
+      required:
+        - cj
+      properties:
+        cj:
+          $ref: '#/components/schemas/CtBlob'
+    RecordResponse:
+      type: object
+      properties:
+        suid_b64:
+          type: string
+        cj:
+          $ref: '#/components/schemas/CtBlob'
+    PasswordUpdateRequest:
+      type: object
+      required:
+        - uid_b64
+        - sp_id
+        - timestamp
+        - sig_b64
+        - cid_new
+        - k_i_new_b64
+      properties:
+        uid_b64:
+          type: string
+        sp_id:
+          type: integer
+        timestamp:
+          type: integer
+        sig_b64:
+          type: string
+        cid_new:
+          $ref: '#/components/schemas/CtBlob'
+        k_i_new_b64:
+          type: string
